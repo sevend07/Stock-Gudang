@@ -3,8 +3,7 @@ const router = express.Router()
 const barangMasuk = require('../controller/barangMasuk.controller')
 
 router.get('/', barangMasuk.findAll)
-router.get('/', barangMasuk.findOne)
-router.get('/search', barangMasuk.findAll)
+router.get('/search', barangMasuk.search)
 
 router.post('/', barangMasuk.create)
 

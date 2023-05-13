@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const stockRouter = require("./router/stock");
 const barangMasukRouter = require('./router/barangMasuk')
+const barangKeluarRouter = require('./router/barangKeluar')
 const db = require("./model/bundleModel");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use('/stock', stockRouter);
 app.use('/barangmasuk', barangMasukRouter)
 
 // barang keluar router
+app.use('/barangkeluar', barangKeluarRouter)
 
 // sequelize sync
 db.sequelize.sync({ force: false });
