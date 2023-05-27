@@ -1,29 +1,40 @@
-import { Container, Row, Col } from "react-bootstrap";
-import { sidebarData } from "./sidebarData";
+import {sidebarData} from "./SidebarData";
+import { Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
+const admin = require("../assets/img/admin.jpg");
 
 const Sidebar = () => {
   return (
-    <Container>
-      <Row>
-        <Col>
-          <div className="profile">
-            <img src="#" alt=""></img>
-            <h3 id="username">Username</h3>
-            <p id="status">status</p>
-          </div>
-          <ul>
-            {sidebarData.map((val) => {
-                return <li>
-                    <div>
-                        {val.icon}
-                    </div>
-                </li>
-            })} 
-          </ul>
+    <Col className="sidebar" xs={2}>
+      <Row className="account">
+        <Col xs={4}>
+          <img src={admin} alt="profile img"></img>
         </Col>
-        <Col></Col>
+        <Col>
+          <h6>USERNAME</h6>
+          <p>status</p>
+        </Col>
       </Row>
-    </Container>
+      <div className="sidebar-break">Menu: </div>
+      <Row className="nav-bar">
+        <ul>
+          {sidebarData.map((val, key) => {
+            return (
+              <li key={key} className="menu">
+                <Col>
+                  <Link
+                    to={val.link}
+                  >
+                    {val.icon}
+                    <span>{val.title}</span>
+                  </Link>
+                </Col>
+              </li>
+            );
+          })}
+        </ul>
+      </Row>
+    </Col>
   );
 };
 

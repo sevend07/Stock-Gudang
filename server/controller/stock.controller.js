@@ -9,6 +9,7 @@ exports.create = async (req, res) => {
     jenis_barang: req.body.jenis_barang,
     merk: req.body.merk,
     jumlah: req.body.jumlah,
+    harga: req.body.harga,
     satuan: req.body.satuan
   }
 
@@ -63,8 +64,8 @@ exports.create = async (req, res) => {
 
 // get all data stock
 exports.findAll = async (req, res) => {
-  const allStock = await stock.findAll()
-  res.json(allStock)
+  await stock.findAll()
+  res.status(200).json(allStock)
 };
 
 // get specific data stock

@@ -61,39 +61,34 @@ exports.findAll = async (req, res) => {
 // find all data for searching data barang masuk
 exports.search = async (req, res) => {
   const search = req.query.search || "";
-  const tanggal = moment(req.body.tanggal, "YYYY-MM-DD").format("YYYY-MM-DD");
-  const startDate = moment(req.body.startDate, "YYYY-MM-DD").format(
-    "YYYY-MM-DD"
-  );
-  console.log(startDate);
-  const endDate = moment(req.body.endDate, "YYYY-MM-DD").format("YYYY-MM-DD");
-  console.log(endDate);
+  const jumlah = Number(search)
+  const startDate = new Date(req.body.startDate)
+  const endDate = new Date(req.body.endDate)
+
   await barangMasuk
     .findAll({
       where: {
-        [Op.or]: [
-          {
-            tanggal: {
-              [Op.like]: Sequelize.literal(`"%${tanggal}%"`),
-            },
-          },
+        [Op.or]: [          
+          // {
+          //   tanggal: {
+          //     [Op.like]: Sequelize.literal(`"%${tanggal}%"`),
+          //   },
+          // },
           {
             tanggal: {
               [Op.between]: [
-                Sequelize.literal(`"${startDate}"`),
-                Sequelize.literal(`"${endDate}"`),
+                startDate,
+                endDate
               ],
             },
           },
-          // Sequelize.literal(`barangmasuk.tanggal LIKE "%${tanggal}%"`),
-          // Sequelize.literal(`barangmasuk.tanggal BETWEEN "${startDate}" AND "${endDate}"`),
+          // Sequelize.literal(`tanggal LIKE "%${tanggal}%"`),
+          // Sequelize.literal(`tanggal BETWEEN "${startDate}" AND "${endDate}"`),
           {
-            "$Stock.nama_barang$": {
-              [Op.like]: `%${search}%`,
-            },
+            jumlah: jumlah
           },
           {
-            "$Stock.jenis_barang$": {
+            "$Stock.nama_barang$": {
               [Op.like]: `%${search}%`,
             },
           },

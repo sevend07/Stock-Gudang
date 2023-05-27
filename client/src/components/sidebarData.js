@@ -1,20 +1,20 @@
-import React from 'react'
-import * as FaIcon from 'raect-icons/fa'
+import * as FaIcon from "react-icons/fa";
+import * as BsIcon from "react-icons/bs"
 
 export const sidebarData = [
   {
-    title: "Stock Barang",
+    title: "Stock",
     icon: <FaIcon.FaBoxOpen />,
-    link: "/stockBarang"
-  },
+    link: "/",
+  },  
   {
     title: "Barang Masuk",
-    icon: <FaIcon.FaShoppingCart />,
-    link: "/stockBarang"
-  },
+    icon: <BsIcon.BsBoxArrowInDown />,
+    link: "/barangmasuk",
+  },  
   {
     title: "Barang Keluar",
-    icon: <FaIcon.FaShoppingCart />,
-    link: "/stockBarang"
-  }
-]
+    icon: <BsIcon.BsBoxArrowUp />,
+    link: "/barangkeluar",
+  },  
+];  

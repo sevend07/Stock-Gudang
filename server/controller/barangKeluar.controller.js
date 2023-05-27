@@ -62,7 +62,13 @@ exports.create = async (req, res) => {
 
 // get all data
 exports.findAll = async (req, res) => {
-  await barangKeluar.findAll()
+  await barangKeluar.findAll({
+    include: {
+      model: stock,
+      as: "Stock",
+      required: false
+    }
+  })
   .then(data => {
     if (data) {
       res.status(200).json(data)
@@ -122,7 +128,105 @@ exports.search = async (req, res) => {
 };
 
 // update data
-exports.update = async (req, res) => {};
+exports.update = async (req, res) => {
+  const id = req.params.id
+  const tanggal = moment(req.body.tanggal, "YYYY-MM-DD").format("YYYY-MM-DD")
+  const update = {
+    jumlah: req.body.jumlah,
+    tanggal: tanggal,
+    keterangan: req.body.keterangan
+  }
+  const { idStock, jumlah: jumlahBarangKeluar} = await barangKeluar.findOne({
+    where: {
+      id_barangKeluar: id
+    }
+  }).then(data => data?data:{})
+
+  if (jumlahBarangKeluar !== null) {
+    let {jumlah: jumlahStock} = await stock.findOne({
+      where: {
+        id_barang: idStock
+      }
+    }).then(data => data?data:{})
+    
+    if (update.jumlah === jumlahBarangKeluar) {
+      jumlahStock = jumlahStock
+    } else if (update.jumlah > jumlahBarangKeluar) {
+      jumlahStock -= (update.jumlah - jumlahBarangKeluar)
+    } else if (update.jumlah < jumlahBarangKeluar) {
+      jumlahStock += (jumlahBarangKeluar - update.jumlah)
+    }
+    await barangKeluar.update(update, {
+      where: {
+        id_barangKeluar: id
+      }
+    }).then(async updated => {
+        await stock.update({
+          jumlah: jumlahStock
+        }, {
+          where: {
+            id_barang: idStock
+          }
+        }).then(updated => {
+          console.log("update stock success")
+        }).catch(err => {
+          console.log(err)
+        })
+        res.status(200).json("update data succes")
+      }).catch(err => {
+        res.status(400).json(err)
+      })
+  } else {
+    console.log("data barangKeluar not found")
+  }
+};
 
 // delete data
-exports.delete = async (req, res) => {};
+exports.delete = async (req, res) => {
+  // if data barang keluar was deleted, jumlah stock + jumlah barang keluar
+  // need: stock id, jumlah stock, barang keluar id, jumlah barang keluar 
+  const id = req.params.id
+  const {idStock, jumlah: jumlahBarangKeluar} = await barangKeluar.findOne({
+    where: {
+      id_barangKeluar: id
+    }
+  }).then(data => data?data:{})
+
+  if (idStock !== null) {
+    await barangKeluar.destroy({
+      where: {
+        id_barangKeluar: id
+      }
+    }).then(async deleted => {
+      const {jumlah: jumlahStock} = await stock.findOne({
+        where: {
+          id_barang: idStock
+        }
+      }).then(data => data?data:{})
+  
+      if (jumlahStock !== null) {
+        await stock.update({
+          jumlah: jumlahStock + jumlahBarangKeluar
+        }, {
+          where: {
+            id_barang: idStock
+          }
+        }).then(updated => {
+          console.log("update stock success")
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        console.log("data stock not found")
+      }
+
+      res.status(200).json("delete data success")
+
+    }).catch(err => {
+      res.status(400).json("delete data error")
+      console.log(err)
+    })
+  } else {
+    console.log("data barang keluar not found")
+  }
+};

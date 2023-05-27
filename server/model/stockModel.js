@@ -7,23 +7,27 @@ module.exports = (sequelize, DataTypes) => {
         },
         nama_barang: {
             type: DataTypes.STRING,
-            allwoNULL: true
+            allwoNULL: false
         },
         jenis_barang: {
             type: DataTypes.STRING,
-            allowNULL: true
+            allowNULL: false
         },
         merk: {
             type: DataTypes.STRING,
-            allowNULL: true
+            allowNULL: false
+        },
+        harga: {
+            type: DataTypes.INTEGER,
+            allowNULL: false
         },
         jumlah: {
             type: DataTypes.INTEGER,
-            allowNULL: true
+            allowNULL: false
         },
         satuan: {
             type: DataTypes.STRING,
-            allowNULL: true
+            allowNULL: false
         }
     },
     {

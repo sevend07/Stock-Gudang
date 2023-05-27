@@ -18,6 +18,7 @@ db.sequelize = sequelize
 db.stock = require('./stockModel')(sequelize, DataTypes)
 db.barangMasuk = require('./barangMasukModel')(sequelize, DataTypes)
 db.barangKeluar = require('./barangKeluarModel')(sequelize, DataTypes)
+db.users = require('./usersModel')(sequelize, DataTypes)
 
 // association
 db.stock.hasMany(db.barangMasuk, {
@@ -38,4 +39,5 @@ db.barangKeluar.belongsTo(db.stock, {
     as: 'Stock',
     onDelete: 'NO ACTION'
 })
+
 module.exports = db
